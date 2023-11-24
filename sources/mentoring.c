@@ -4,7 +4,7 @@
 int choice = -1;
 char password[10];
 
-void getPassword();
+int getPassword();
 
 int main() {
 	int terminate = 0;
@@ -30,8 +30,8 @@ int main() {
 
 			break;
 
-		case 3: // 3번 틀리면 프로그램 종료? 멘토 기능 하나 더 추가?
-			getPassword();
+		case 3:
+			terminate = getPassword();
 			break;
 
 		case 4:
@@ -48,8 +48,7 @@ int main() {
 	return 0;
 }
 
-void getPassword() {
-	int terminate = 0;
+int getPassword() {
 	int try = 0;
 
 	while (1) {
@@ -58,15 +57,16 @@ void getPassword() {
 
 		if (strcmp(password, "mentoring") == 0) {
 			printf("맞았습니다!\n");
-			return;
+			return 0;
+			break;
 		}
 		else {
 			try++;
 			printf("틀렸습니다. 다시 입력해주세요. 기회는 %d번 남았습니다.\n", 3 - try);
 
 			if (try >= 3) {
-				printf("프로그램을 종료합니다. 너무 많은 시도 실패.\n");
-				terminate = 1;
+				printf("3회 이상 틀리셨습니다!\n");
+				return 1;
 			}
 		}
 	}
