@@ -50,17 +50,12 @@ int main() {
 				return 0;
 			}
 			else {
-				// 수업 현황 출력 기능
+				printf("수업 진행 현황 출력 기능 구현 예정");
 			}
 			break;
 
 		case 3:
-			if (getPassword() == 1) {
-				return 0;
-			}
-			else {
-				// 단어장 프로그램
-			}
+
 			break;
 
 		case 4:
