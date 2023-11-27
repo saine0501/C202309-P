@@ -50,7 +50,7 @@ int main() {
 				return 0;
 			}
 			else {
-				printf("수업 진행 현황 출력 기능 구현 예정");
+				printf("수업 진행 현황 출력 기능 구현 예정\n");
 			}
 			break;
 
@@ -93,10 +93,6 @@ int getPassword() {
 				printf("비밀번호 3회 이상 실패. 프로그램을 종료합니다.\n");
 				return 1;
 			}
-
-			// 입력 버퍼 비우기
-			int c;
-			while ((c = getchar()) != '\n' && c != EOF);
 		}
 	}
 }
