@@ -1,1 +1,3 @@
 int getPassword();
+
+void getNow();

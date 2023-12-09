@@ -1,0 +1,4 @@
+apple 사과
+bear 곰
+cake 케이크
+door 문

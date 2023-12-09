@@ -2,16 +2,15 @@
 #include <string.h>
 #include <stdlib.h>
 #include "header.h"
+#define _CRT_SECURE_NO_WARNINGS
 
 #define CHARNUM 20
 #define STUDENTS 4
 #define MAX 10000
 
-char password[10];
-
-int getPassword();
 void getMessage(int numName);
 void getNow();
+void testVocabulary();
 
 int main() {
 	int terminate = 0;
@@ -24,7 +23,7 @@ int main() {
 	printf("메뉴를 선택해주세요.\n");
 	printf("1. 수업 메시지 출력\n");
 	printf("2. 수업 진행 현황\n");
-	printf("3. 단어장\n");
+	printf("3. 단어 퀴즈\n");
 	printf("4. 프로그램 종료\n");
 	printf("----------------------\n");
 
@@ -42,6 +41,7 @@ int main() {
 			else {
 				int numName = -1;
 
+				printf("수업 메시지 출력 프로그램입니다!\n");
 				printf("1: %s 2: %s 3: %s 4: %s\n",
 					studentNames[0], studentNames[1], studentNames[2], studentNames[3]);
 				printf("멘티의 이름을 선택해주세요 : ");
@@ -57,13 +57,15 @@ int main() {
 				return 0;
 			}
 			else {
+				printf("수업 진행 현황 출력 프로그램입니다!\n");
 				getNow();
 			}
 			break;
 
 		case 3:
-			// 단어장
-
+			// 단어 퀴즈
+			printf("단어 퀴즈 프로그램입니다!\n");
+			testVocabulary();
 			break;
 
 		case 4:
@@ -85,10 +87,9 @@ int main() {
 		printf("메뉴를 선택해주세요.\n");
 		printf("1. 수업 메시지 출력\n");
 		printf("2. 수업 진행 현황\n");
-		printf("3. 단어장\n");
+		printf("3. 단어 퀴즈\n");
 		printf("4. 프로그램 종료\n");
 		printf("----------------------\n");
-
 	}
 	return 0;
 }
@@ -118,86 +119,41 @@ void getMessage(int numName) {
 	}
 }
 
-void getNow() {
+void testVocabulary() {
 	FILE* fp;
-	fopen_s(&fp, "./mentoring.txt", "r");
+	fopen_s(&fp, "./vocabulary.txt", "r");
 
 	if (fp == NULL) {
 		printf("파일을 열 수 없습니다.\n");
 		return;
 	}
 
-	char line[MAX];
-	int zeroCount = 0;
-	int fortyFiveCount = 0;
-	int one = 0;
-	int two = 0;
-	int three = 0;
-	int four = 0;
-	int oneNo = 0;
-	int twoNo = 0;
-	int threeNo = 0;
-	int fourNo = 0;
+	char eng_word[256] = ""; // 영어 단어
+	char kor_word[256] = ""; // 한국어 뜻
+	char answer[256] = ""; // 멘티의 답
 
-	// 파일에서 한 줄씩 읽어오기
-	while (fgets(line, MAX, fp) != NULL) {
-		// "0분"이라는 문자열이 포함되어 있는지 확인
-		if (strstr(line, "0분") != NULL) {
-			zeroCount++;
-		}
+	int lineCount = 0;
 
-		// "45분"이라는 문자열이 포함되어 있는지 확인
-		if (strstr(line, "45분") != NULL) {
-			fortyFiveCount++;
-		}
-
-		if (strstr(line, "김가가") != NULL) {
-			one++;
-		}
-
-		if (strstr(line, "이나나") != NULL) {
-			two++;
-		}
-
-		if (strstr(line, "박다다") != NULL) {
-			three++;
-		}
-
-		if (strstr(line, "최라라") != NULL) {
-			four++;
-		}
-
-		if (strstr(line, "김가가 0분") != NULL) {
-			oneNo++;
-		}
-
-		if (strstr(line, "이나나 0분") != NULL) {
-			twoNo++;
-		}
-
-		if (strstr(line, "박다다 0분") != NULL) {
-			threeNo++;
-		}
-
-		if (strstr(line, "최라라 0분") != NULL) {
-			fourNo++;
-		}
-
+	while (fscanf_s(fp, "%s %s", eng_word, (unsigned int)sizeof(eng_word), kor_word, (unsigned int)sizeof(kor_word)) != EOF) {
+		lineCount++;
 	}
 
-	// 파일 닫기
+	rewind(fp);
+
+	for (int i = 0; i < lineCount; i++) {
+		if (fscanf_s(fp, "%s %s", eng_word, (unsigned int)sizeof(eng_word), kor_word, (unsigned int)sizeof(kor_word)) != EOF) {
+			printf("'%s'의 한국어 뜻은? ", eng_word);
+			scanf_s("%s", answer, (unsigned int)sizeof(answer));
+
+			if (strcmp(answer, kor_word) == 0) {
+				printf("%s, 정답입니다!\n", kor_word);
+			}
+			else {
+				printf("틀렸습니다. 정답은 %s입니다.\n", kor_word);
+			}
+		}
+	}
+
 	fclose(fp);
 
-	int money = 6000 * zeroCount + 12000 * fortyFiveCount;
-
-	// 결과 출력
-	printf("김가가 멘티의 수업 진행 회차 : 총 %d회 / 남은 회차 : %d회\n", one, 20-one);
-	printf("김가가 멘티의 결석 횟수 : %d\n", oneNo);
-	printf("이나나 멘티의 수업 진행 회차 : 총 %d회 / 남은 회차 : %d회\n", two, 20 - two);
-	printf("이나나 멘티의 결석 횟수 : %d\n", twoNo);
-	printf("박다다 멘티의 수업 진행 회차 : 총 %d회 / 남은 회차 : %d회\n", three, 20 - three);
-	printf("박다다 멘티의 결석 횟수 : %d\n", threeNo);
-	printf("최라라 멘티의 수업 진행 회차 : 총 %d회 / 남은 회차 : %d회\n", four, 20 - four);
-	printf("최라라 멘티의 결석 횟수 : %d\n", fourNo);
-	printf("총 급여 : %d원\n", money);
 }
