@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 char password[10];
 
@@ -11,6 +12,7 @@ int getPassword() {
 
 		if (strcmp(password, "mentoring") == 0) {
 			printf("맞았습니다!\n");
+			printf("\n");
 			return 0;
 		}
 		else {
