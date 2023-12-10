@@ -40,14 +40,8 @@ void getNow() {
 	char line[MAX];
 	int zeroCount = 0;
 	int fortyFiveCount = 0;
-	int one = 0;
-	int two = 0;
-	int three = 0;
-	int four = 0;
-	int oneNo = 0;
-	int twoNo = 0;
-	int threeNo = 0;
-	int fourNo = 0;
+	int one = 0, two = 0, three = 0, four = 0;
+	int oneNo = 0, twoNo = 0, threeNo = 0, fourNo = 0;
 
 	while (fgets(line, MAX, fp) != NULL) {
 		if (strstr(line, "0Ка") != NULL) {

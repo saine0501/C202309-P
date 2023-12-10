@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
+#include <conio.h>
 #include "header.h"
-#define _CRT_SECURE_NO_WARNINGS
 
+#define _CRT_SECURE_NO_WARNINGS
 #define CHARNUM 20
 #define STUDENTS 4
 #define MAX 10000
@@ -11,6 +13,7 @@
 void getMessage(int numName);
 void getNow();
 void testVocabulary();
+void stopWatch();
 
 int main() {
 	int terminate = 0;
@@ -24,7 +27,8 @@ int main() {
 	printf("1. 수업 메시지 출력\n");
 	printf("2. 수업 진행 현황\n");
 	printf("3. 단어 퀴즈\n");
-	printf("4. 프로그램 종료\n");
+	printf("4. 스톱워치\n");
+	printf("5. 프로그램 종료\n");
 	printf("----------------------\n");
 
 	while (1) {
@@ -69,11 +73,17 @@ int main() {
 			break;
 
 		case 4:
+			// 스톱워치 / 타이머 프로그램
+			printf("스톱워치 프로그램입니다!\n\n");
+			stopWatch();
+			break;
+
+		case 5:
 			// 종료
 			terminate = 1;
 			break;
 
-		default: // 사용자가 1~4가 아닌 다른 값을 입력할 경우
+		default: // 사용자가 1~5가 아닌 다른 값을 입력할 경우
 			printf("잘못된 선택입니다. 다시 선택하세요.\n");
 		}
 
@@ -82,13 +92,15 @@ int main() {
 			break;
 		}
 
+		// 종료 선택 전까지 메뉴 선택 목록 반복 출력
 		printf("\n");
 		printf("----------------------\n");
 		printf("메뉴를 선택해주세요.\n");
 		printf("1. 수업 메시지 출력\n");
 		printf("2. 수업 진행 현황\n");
 		printf("3. 단어 퀴즈\n");
-		printf("4. 프로그램 종료\n");
+		printf("4. 스톱워치\n");
+		printf("5. 프로그램 종료\n");
 		printf("----------------------\n");
 	}
 	return 0;
@@ -153,7 +165,34 @@ void testVocabulary() {
 			}
 		}
 	}
-
 	fclose(fp);
+}
 
+void stopWatch() {
+	clock_t start = 0, now = 0;
+	clock_t duration = 0, sec = 0, min = 0, hour = 0, milsec = 0;
+
+
+	printf("바로 시작, 키보드를 누르면 종료\n");
+
+	start = clock();
+
+	while (1) {
+
+		now = clock();
+		duration = now - start;
+
+		sec = duration / CLOCKS_PER_SEC;
+		milsec = duration % CLOCKS_PER_SEC;
+		hour = sec / 3600;
+		min = (sec % 3600) / 60;
+		sec = sec % 60;
+
+		printf("%d:%02d:%02d.%03d\r", hour, min, sec, milsec);
+
+		if (_kbhit()) {
+			break;
+		}
+	}
+	printf("\n");
 }
