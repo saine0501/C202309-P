@@ -73,7 +73,7 @@ int main() {
 			break;
 
 		case 4:
-			// 스톱워치 / 타이머 프로그램
+			// 스톱워치 프로그램
 			printf("스톱워치 프로그램입니다!\n\n");
 			stopWatch();
 			break;
@@ -171,7 +171,6 @@ void testVocabulary() {
 void stopWatch() {
 	clock_t start = 0, now = 0;
 	clock_t duration = 0, sec = 0, min = 0, hour = 0, milsec = 0;
-
 
 	printf("바로 시작, 키보드를 누르면 종료\n");
 
