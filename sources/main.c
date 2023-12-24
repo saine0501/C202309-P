@@ -6,15 +6,14 @@
 #include "header.h"
 
 #define _CRT_SECURE_NO_WARNINGS
-#define MAX 10000
 
 int main() {
-	int numStudents = 4;
+	int numStudents = 4; // 담당하는 멘티의 수는 4명
 	int terminate = 0;
-	int tryCount = 0;
 
 	// 멘티들의 이름은 김가가, 이나나, 박다다, 최라라
 	// 수업 시간은 18:00, 19:30, 20:30, 21:00
+
 	struct StudentInfo* students = (struct StudentInfo*)malloc(numStudents * sizeof(struct StudentInfo));
 	if (students == NULL) {
 		printf("메모리 할당 오류\n");
@@ -39,10 +38,10 @@ int main() {
 	printf("----------------------\n");
 
 	while (1) {
-		int choiceA = -1;
-		scanf_s("%d", &choiceA);
+		int choice = -1;
+		scanf_s("%d", &choice);
 
-		switch (choiceA) {
+		switch (choice) {
 
 		case 1:
 			// 수업 메시지 출력
@@ -63,13 +62,13 @@ int main() {
 			break;
 
 		case 2:
-			// 수업 진행 현황 출력
+			// 수업 진행 현황
 			if (getPassword() == 1) {
 				return 0;
 			}
 			else {
-				printf("수업 진행 현황 출력 프로그램입니다!\n");
-				getNow(students);
+				printf("수업 진행 현황 프로그램입니다!\n");
+				getNow(students, numStudents);
 			}
 			break;
 

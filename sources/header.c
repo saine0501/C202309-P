@@ -9,30 +9,6 @@
 
 char password[10];
 
-int getPassword() {
-	int tryCount = 0;
-
-	while (1) {
-		printf("비밀번호를 입력하세요: ");
-		scanf_s("%s", password, (int)sizeof(password));
-
-		if (strcmp(password, "mentoring") == 0) {
-			printf("맞았습니다!\n");
-			printf("\n");
-			return 0;
-		}
-		else {
-			tryCount++;
-			printf("틀렸습니다. 다시 입력해주세요. 기회는 %d번 남았습니다.\n", 3 - tryCount);
-
-			if (tryCount >= 3) {
-				printf("비밀번호 3회 이상 실패. 프로그램을 종료합니다.\n");
-				return 1;
-			}
-		}
-	}
-}
-
 void inputStudentInfo(struct StudentInfo* students, int numStudents) {
 	for (int i = 0; i < numStudents; i++) {
 		students[i].name = (char*)malloc(50 * sizeof(char));
@@ -67,6 +43,30 @@ void freeStudentInfo(struct StudentInfo* students, int numStudents) {
 	free(students);
 }
 
+int getPassword() {
+	int tryCount = 0;
+
+	while (1) {
+		printf("비밀번호를 입력하세요: ");
+		scanf_s("%s", password, (int)sizeof(password));
+
+		if (strcmp(password, "mentoring") == 0) {
+			printf("맞았습니다!\n");
+			printf("\n");
+			return 0;
+		}
+		else {
+			tryCount++;
+			printf("틀렸습니다. 다시 입력해주세요. 기회는 %d번 남았습니다.\n", 3 - tryCount);
+
+			if (tryCount >= 3) {
+				printf("비밀번호 3회 이상 실패. 프로그램을 종료합니다.\n");
+				return 1;
+			}
+		}
+	}
+}
+
 void getMessage(struct StudentInfo* students, int numName) {
 	int situation;
 
@@ -77,7 +77,7 @@ void getMessage(struct StudentInfo* students, int numName) {
 	scanf_s("%d", &situation);
 
 	if (situation == 1) {
-		printf("%s 멘티님, 잠시 후 %s 에 멘토링이 진행될 예정입니다~! 교재와 함께 시간 맞춰 접속해주세요 :)\n",
+		printf("%s 멘티님, 잠시 후 %s에 멘토링이 진행될 예정입니다~! 교재와 함께 시간 맞춰 접속해주세요 :)\n",
 			students[numName - 1].name, students[numName - 1].time);
 	}
 	else if (situation == 2) {
@@ -90,7 +90,7 @@ void getMessage(struct StudentInfo* students, int numName) {
 	}
 }
 
-void getNow(struct StudentInfo* students) {
+void getNow(struct StudentInfo* students, int numStudents) {
 	FILE* fp;
 	fopen_s(&fp, "./mentoring.txt", "r");
 
@@ -102,54 +102,48 @@ void getNow(struct StudentInfo* students) {
 	char line[MAX];
 	int zeroCount = 0;
 	int fortyFiveCount = 0;
-	int one = 0, two = 0, three = 0, four = 0;
-	int oneNo = 0, twoNo = 0, threeNo = 0, fourNo = 0;
+
+	int* sessionCounts = (int*)calloc(numStudents, sizeof(int));
+	int* absentCounts = (int*)calloc(numStudents, sizeof(int));
 
 	while (fgets(line, MAX, fp) != NULL) {
+		// 급여 계산을 위해 수업이 진행된 횟수 계산
 		if (strstr(line, "0분") != NULL) {
 			zeroCount++;
 		}
 		if (strstr(line, "45분") != NULL) {
 			fortyFiveCount++;
 		}
-		if (strstr(line, students[0].name) != NULL) {
-			one++;
-		}
-		if (strstr(line, students[1].name) != NULL) {
-			two++;
-		}
-		if (strstr(line, students[2].name) != NULL) {
-			three++;
-		}
-		if (strstr(line, students[3].name) != NULL) {
-			four++;
-		}
-		if (strstr(line, "김가가 0분") != NULL) {
-			oneNo++;
-		}
-		if (strstr(line, "이나나 0분") != NULL) {
-			twoNo++;
-		}
-		if (strstr(line, "박다다 0분") != NULL) {
-			threeNo++;
-		}
-		if (strstr(line, "최라라 0분") != NULL) {
-			fourNo++;
+
+		// 멘티의 수업 진행 횟수와 결석 횟수 계산
+		for (int i = 0; i < numStudents; i++) {
+			if (strstr(line, students[i].name) != NULL) {
+				// 수업이 진행된 총 횟수
+				sessionCounts[i]++;
+			}
+			if (strstr(line, students[i].name) != NULL && strstr(line, "0분") != NULL) {
+				// 멘티가 결석한 횟수
+				absentCounts[i]++;
+			}
 		}
 	}
 
 	fclose(fp);
+
+	// 총 급여 계산
 	int money = 6000 * zeroCount + 12000 * fortyFiveCount;
 
-	printf("%s 멘티의 수업 진행 회차 : 총 %d회 / 남은 회차 : %d회\n", students[0].name, one, 20 - one);
-	printf("%s 멘티의 결석 횟수 : %d\n", students[0].name, oneNo);
-	printf("%s 멘티의 수업 진행 회차 : 총 %d회 / 남은 회차 : %d회\n", students[1].name, two, 20 - two);
-	printf("%s 멘티의 결석 횟수 : %d\n", students[1].name, twoNo);
-	printf("%s 멘티의 수업 진행 회차 : 총 %d회 / 남은 회차 : %d회\n", students[2].name, three, 20 - three);
-	printf("%s 멘티의 결석 횟수 : %d\n", students[2].name, threeNo);
-	printf("%s 멘티의 수업 진행 회차 : 총 %d회 / 남은 회차 : %d회\n", students[3].name, four, 20 - four);
-	printf("%s 멘티의 결석 횟수 : %d\n", students[3].name, fourNo);
+	printf("\n");
+	for (int i = 0; i < numStudents; i++) {
+		printf("%s 멘티의 수업 진행 회차 : 총 %d회 / 남은 회차 : %d회\n", students[i].name,
+			sessionCounts[i], 20 - sessionCounts[i]);
+		printf("%s 멘티의 결석 횟수 : %d\n", students[i].name, absentCounts[i]);
+	}
+
 	printf("총 급여 : %d원\n", money);
+
+	free(sessionCounts);
+	free(absentCounts);
 }
 
 void testVocabulary() {
@@ -167,15 +161,19 @@ void testVocabulary() {
 
 	int lineCount = 0;
 
-	while (fscanf_s(fp, "%s %s", eng_word, (unsigned int)sizeof(eng_word), kor_word, (unsigned int)sizeof(kor_word)) != EOF) {
+	while (fscanf_s(fp, "%s %s", eng_word, (unsigned int)sizeof(eng_word), kor_word,
+		(unsigned int)sizeof(kor_word)) != EOF) 
+	{
 		lineCount++;
 	}
 
 	rewind(fp);
 
 	for (int i = 0; i < lineCount; i++) {
-		if (fscanf_s(fp, "%s %s", eng_word, (unsigned int)sizeof(eng_word), kor_word, (unsigned int)sizeof(kor_word)) != EOF) {
-			printf("'%s'의 한국어 뜻은? ", eng_word);
+		if (fscanf_s(fp, "%s %s", eng_word, (unsigned int)sizeof(eng_word), kor_word,
+			(unsigned int)sizeof(kor_word)) != EOF) 
+		{
+			printf("\n'%s'의 한국어 뜻은? ", eng_word);
 			scanf_s("%s", answer, (unsigned int)sizeof(answer));
 
 			if (strcmp(answer, kor_word) == 0) {
