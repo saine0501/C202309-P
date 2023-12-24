@@ -22,10 +22,14 @@ int main() {
 
 	printf("멘토링 자동 관리 프로그램\n\n");
 	printf("멘티의 이름을 입력해주세요!\n");
+
+	// 멘티의 이름을 입력받아 저장
 	inputStudentInfo(students, numStudents);
 
 	printf("\n멘티별 수업시간을 입력해주세요!\n");
 	printf("입력 형식은 00:00 입니다.\n");
+
+	// 멘티 별 수업 시간을 입력받아 저장
 	inputTimeInfo(students, numStudents);
 
 	printf("----------------------\n");
@@ -89,12 +93,15 @@ int main() {
 			terminate = 1;
 			break;
 
-		default: // 사용자가 1~5가 아닌 다른 값을 입력할 경우
+		default: 
+			// 사용자가 1~5가 아닌 다른 값을 입력할 경우
 			printf("잘못된 선택입니다. 다시 선택하세요.\n");
 		}
 
 		if (terminate == 1) {
 			printf("종료를 선택하셨습니다. 프로그램을 종료합니다.");
+
+			// 동적 메모리 할당 해제
 			freeStudentInfo(students, numStudents);
 			break;
 		}

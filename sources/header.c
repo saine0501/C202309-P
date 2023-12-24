@@ -10,6 +10,7 @@
 char password[10];
 
 void inputStudentInfo(struct StudentInfo* students, int numStudents) {
+	// 멘티의 이름을 입력받아 저장
 	for (int i = 0; i < numStudents; i++) {
 		students[i].name = (char*)malloc(50 * sizeof(char));
 		if (students[i].name == NULL) {
@@ -23,6 +24,7 @@ void inputStudentInfo(struct StudentInfo* students, int numStudents) {
 }
 
 void inputTimeInfo(struct StudentInfo* students, int numStudents) {
+	// 멘티 별 수업 시간을 입력받아 저장
 	for (int i = 0; i < numStudents; i++) {
 		students[i].time = (char*)malloc(50 * sizeof(char));
 		if (students[i].time == NULL) {
@@ -36,6 +38,7 @@ void inputTimeInfo(struct StudentInfo* students, int numStudents) {
 }
 
 void freeStudentInfo(struct StudentInfo* students, int numStudents) {
+	// 동적 메모리 할당 해제
 	for (int i = 0; i < numStudents; i++) {
 		free(students[i].name);
 		free(students[i].time);
@@ -51,14 +54,17 @@ int getPassword() {
 		scanf_s("%s", password, (int)sizeof(password));
 
 		if (strcmp(password, "mentoring") == 0) {
+			// 비밀번호를 맞춘 경우
 			printf("맞았습니다!\n");
 			printf("\n");
 			return 0;
 		}
 		else {
+			// 비밀번호를 틀린 경우
 			tryCount++;
 			printf("틀렸습니다. 다시 입력해주세요. 기회는 %d번 남았습니다.\n", 3 - tryCount);
 
+			// 비밀번호를 3회 이상 틀린 경우
 			if (tryCount >= 3) {
 				printf("비밀번호 3회 이상 실패. 프로그램을 종료합니다.\n");
 				return 1;
@@ -68,6 +74,7 @@ int getPassword() {
 }
 
 void getMessage(struct StudentInfo* students, int numName) {
+	// 수업 메세지 출력
 	int situation;
 
 	printf("상황을 선택해주세요.\n");
@@ -77,20 +84,24 @@ void getMessage(struct StudentInfo* students, int numName) {
 	scanf_s("%d", &situation);
 
 	if (situation == 1) {
+		// 수업 시작 전인 경우의 메세지 출력
 		printf("%s 멘티님, 잠시 후 %s에 멘토링이 진행될 예정입니다~! 교재와 함께 시간 맞춰 접속해주세요 :)\n",
 			students[numName - 1].name, students[numName - 1].time);
 	}
 	else if (situation == 2) {
+		// 멘티가 지각한 경우의 메세지 출력
 		printf("%s 멘티님, 수업 시작 후 10분이 경과되었습니다. 수업 참여에 어려움이 있을까요?\n",
 			students[numName - 1].name);
 	}
 	else if (situation == 3) {
+		// 수업이 끝난 경우의 메세지 출력
 		printf("%s 멘티님, 오늘 수업도 수고하셨습니다! 다음 수업 시간에 다시 봐요 :)\n",
 			students[numName - 1].name);
 	}
 }
 
 void getNow(struct StudentInfo* students, int numStudents) {
+	// 수업 진행 현황 출력
 	FILE* fp;
 	fopen_s(&fp, "./mentoring.txt", "r");
 
@@ -103,6 +114,7 @@ void getNow(struct StudentInfo* students, int numStudents) {
 	int zeroCount = 0;
 	int fortyFiveCount = 0;
 
+	// 수업 진행 횟수와 결석 횟수 계산을 위한 동적 메모리 할당
 	int* sessionCounts = (int*)calloc(numStudents, sizeof(int));
 	int* absentCounts = (int*)calloc(numStudents, sizeof(int));
 
@@ -133,20 +145,22 @@ void getNow(struct StudentInfo* students, int numStudents) {
 	// 총 급여 계산
 	int money = 6000 * zeroCount + 12000 * fortyFiveCount;
 
+	// 수업 정보와 총 급여 출력
 	printf("\n");
 	for (int i = 0; i < numStudents; i++) {
 		printf("%s 멘티의 수업 진행 회차 : 총 %d회 / 남은 회차 : %d회\n", students[i].name,
 			sessionCounts[i], 20 - sessionCounts[i]);
 		printf("%s 멘티의 결석 횟수 : %d\n", students[i].name, absentCounts[i]);
 	}
-
 	printf("총 급여 : %d원\n", money);
-
+	
+	// 동적 메모리 할당 해제
 	free(sessionCounts);
 	free(absentCounts);
 }
 
 void testVocabulary() {
+	// 단어 퀴즈
 	FILE* fp;
 	fopen_s(&fp, "./vocabulary.txt", "r");
 
@@ -161,6 +175,7 @@ void testVocabulary() {
 
 	int lineCount = 0;
 
+	// 입력한 파일에서 영어 단어와 한국어 뜻 저장
 	while (fscanf_s(fp, "%s %s", eng_word, (unsigned int)sizeof(eng_word), kor_word,
 		(unsigned int)sizeof(kor_word)) != EOF) 
 	{
@@ -169,6 +184,7 @@ void testVocabulary() {
 
 	rewind(fp);
 
+	// 파일에 저장된 line의 수만큼 단어 퀴즈 출제
 	for (int i = 0; i < lineCount; i++) {
 		if (fscanf_s(fp, "%s %s", eng_word, (unsigned int)sizeof(eng_word), kor_word,
 			(unsigned int)sizeof(kor_word)) != EOF) 
@@ -188,6 +204,7 @@ void testVocabulary() {
 }
 
 void stopWatch() {
+	// 스톱워치 기능
 	clock_t start = 0, now = 0;
 	clock_t duration = 0, sec = 0, min = 0, hour = 0, milsec = 0;
 
